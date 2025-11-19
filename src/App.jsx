@@ -1,69 +1,72 @@
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import Layout from './components/Layout'
+import Onboarding from './components/Onboarding'
+import Home from './components/Home'
+import FoodFlow from './components/FoodFlow'
+import RideFlow from './components/RideFlow'
+import Profile from './components/Profile'
+import OrderTracking from './components/OrderTracking'
+
 function App() {
+  const [showOnboarding, setShowOnboarding] = useState(true)
+  const [screen, setScreen] = useState('home') // home | food | ride | profile | tracking | compare
+
+  const handleSelect = (option) => {
+    setScreen(option)
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Subtle pattern overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)]"></div>
+    <Layout title="Glide" onNavigate={setScreen}>
+      <div className="min-h-[calc(100vh-8rem)]">
+        <AnimatePresence mode="wait">
+          {showOnboarding ? (
+            <motion.div key="onb">
+              <Onboarding onDone={() => setShowOnboarding(false)} />
+            </motion.div>
+          ) : screen === 'home' ? (
+            <motion.div key="home" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <Home onSelect={handleSelect} />
+            </motion.div>
+          ) : screen === 'food' ? (
+            <motion.div key="food" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <FoodFlow onBack={() => setScreen('home')} />
+            </motion.div>
+          ) : screen === 'ride' ? (
+            <motion.div key="ride" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <RideFlow onBack={() => setScreen('home')} />
+            </motion.div>
+          ) : screen === 'profile' ? (
+            <motion.div key="profile" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <Profile />
+            </motion.div>
+          ) : screen === 'tracking' ? (
+            <motion.div key="tracking" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <OrderTracking />
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
 
-      <div className="relative min-h-screen flex items-center justify-center p-8">
-        <div className="max-w-2xl w-full">
-          {/* Header with Flames icon */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center mb-6">
-              <img
-                src="/flame-icon.svg"
-                alt="Flames"
-                className="w-24 h-24 drop-shadow-[0_0_25px_rgba(59,130,246,0.5)]"
-              />
-            </div>
+      <ThemePanels />
+    </Layout>
+  )
+}
 
-            <h1 className="text-5xl font-bold text-white mb-4 tracking-tight">
-              Flames Blue
-            </h1>
-
-            <p className="text-xl text-blue-200 mb-6">
-              Build applications through conversation
-            </p>
-          </div>
-
-          {/* Instructions */}
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-8 shadow-xl mb-6">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-                1
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Describe your idea</h3>
-                <p className="text-blue-200/80 text-sm">Use the chat panel on the left to tell the AI what you want to build</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 mb-6">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-                2
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Watch it build</h3>
-                <p className="text-blue-200/80 text-sm">Your app will appear in this preview as the AI generates the code</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-                3
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Refine and iterate</h3>
-                <p className="text-blue-200/80 text-sm">Continue the conversation to add features and make changes</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="text-center">
-            <p className="text-sm text-blue-300/60">
-              No coding required • Just describe what you want
-            </p>
-          </div>
+function ThemePanels() {
+  return (
+    <div className="px-6 pb-40">
+      <h3 className="text-sm font-semibold text-slate-600 dark:text-zinc-400 mb-3">Light & Dark Preview</h3>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="rounded-3xl p-4 bg-white border border-black/5 shadow-sm">
+          <div className="h-28 rounded-2xl bg-gradient-to-br from-orange-100 to-white mb-3" />
+          <div className="h-3 w-24 rounded bg-slate-200 mb-2" />
+          <div className="h-3 w-16 rounded bg-slate-200" />
+        </div>
+        <div className="rounded-3xl p-4 bg-zinc-900 border border-white/5 shadow-sm">
+          <div className="h-28 rounded-2xl bg-gradient-to-br from-orange-500/20 to-zinc-900 mb-3" />
+          <div className="h-3 w-24 rounded bg-zinc-700 mb-2" />
+          <div className="h-3 w-16 rounded bg-zinc-700" />
         </div>
       </div>
     </div>
